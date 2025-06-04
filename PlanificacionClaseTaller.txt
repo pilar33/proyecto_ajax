@@ -1,0 +1,89 @@
+Paso 1: Implementar menu bootstrap en index.html (cambiar el menu)
+Paso 1: Crear un home.html (Para ser invocado en el menu) - implementar una card
+Paso 2: Invocar home.html directamente desde algun link del menu (para mostrar que se pierde la navegacion)
+Paso 3: Implementar Ajax para home.html desde index.html
+Paso 4: Invocar productos.html desde el otro link del menu
+Paso 4: Mostrar como interactuo en la misma pagina con ajax
+Ahora si mostrar Ajax con datatables
+
+Paso 1: crear vista que carga solo productos.html sin pasar el modelo productos
+Paso 2: crear vista que retorna en formato json el modelo
+from django.http import JsonResponse
+ def productos_json(request):
+    productos = list(producto.objects.values("nombre", "descripcion", "iEstado"))
+    return JsonResponse({'data': productos})
+
+Paso 3: en productos.html crear el datatables + ajax para recuperar los datos json
+
+ $(document).ready(function(){
+          $('#tblProductos').DataTable({
+              "ajax": {
+                  "url": "{% url 'api_productos' %}",
+                  "dataSrc": "data"
+              },
+              "columns": [
+                  { "data": "nombre"},
+                  { "data": "descripcion"},
+                  { "data": "iEstado"}
+              ]
+          });
+      });
+
+Implementar modal/bootbox
+Paso 1: Definir formulario para el modelo productos, agregar boton submit
+Paso 2: Definir el html que invoca al form
+Paso 3: Definir la vista para el agregar producto con respuesta json:
+
+from django.shortcuts import render, HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
+from django.template.loader import render_to_string
+
+@xframe_options_exempt
+def agregar_productos(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Avisar al iframe que debe cerrarse:
+            return HttpResponse(
+                "<script>window.parent.postMessage({action: 'closeBootbox'}, '*');</script>"
+            )
+    else:
+        form = ProductoForm()
+    return render(request, 'agregar.html', {'form': form})
+
+
+Paso 3: Mapear en la url el agregar producto
+Paso 4: Implementar bootbox en evento click del boton agregar en productos.html
+  $('#btnAgregarProducto').click(function() {
+         openFormModal("{% url 'sucursales_add' %}");
+      }
+          
+$('#btnAgregarProducto').click(function() {
+             url = "{% url 'add_productos' %}"; // URL del formulario de agregar producto
+             bootbox.dialog({
+              title: 'Formulario',
+              message: "<iframe id='formIframe' src='" + url + "' scrolling='yes' marginwidth='0' marginheight='0' frameborder='no' width='100%' height='600'></iframe>",
+              size: 'large',
+              buttons: {
+                  cancel: {
+                      label: 'Cerrar',
+                      className: 'btn-secondary',
+                      callback: function() {
+                          //location.reload(); // Recargar la página principal para actualizar la grilla
+                          $('#divContenidoPrincipal').load("{% url 'productos' %}");
+                      }
+                  }
+              }
+          });
+
+          // Escucha mensajes desde el iframe para cerrar el bootbox
+          window.addEventListener('message', function(event) {
+              if (event.data.action === 'closeBootbox') {
+                  bootbox.hideAll();
+                  location.reload(); // Recargar la página principal para actualizar la grilla
+              }
+          }, false);
+
+
+      });
