@@ -13,43 +13,77 @@
 
 </head>
 <body>
-    <div class="container">
-    <h1>Lista de productos</h1>
-    <input type="button" id="btnAgregarProducto" value="Agregar" />
+    <div class="container">    
+      <h1>Lista de productos</h1>
+      <input type="button" id="btnAgregarProducto" value="Agregar" />
 
-    <table id="tblProductos">
-      <thead>
-        <th>Nombre</th>
-        <th>Descripcion</th>
-        <th>Estado</th>
-      </thead>
-      <tbody>
-         {% for p in productos %}
-            <tr>
-                <td>{{ p.nombre }}</td>
-                <td>{{ p.descripcion }}</td>
-                <td>{{ p.iEstado }}</td>
-            </tr>
-         {% endfor %}
-      </tbody>
+  <table id="tblProductos">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody></tbody>  <!-- Se llenará con AJAX -->
+</table>
 
-    </table>
-    
+
 
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
     <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.1/datatables.min.js" integrity="sha384-ROkeXpI5WXehVm9L/9veFByAcaYQZm1COgLHCXWOrU+gHlOgUPvkHf2V87XSC4/o" crossorigin="anonymous"></script>   
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.4/bootbox.all.min.js"></script>
+
     <script type="text/javascript">
-    $(document).ready(function(){
-        $('#tblProductos').DataTable()
+     $(document).ready(function(){
+          $('#tblProductos').DataTable({
+              "ajax": {
+                  "url": "{% url 'api_productos' %}",
+                  "dataSrc": "data"
+              },
+              "columns": [
+                  { "data": "nombre"},
+                  { "data": "descripcion"},
+                  { "data": "iEstado"}
+              ]
+          });
 
-    })
+       $('#btnAgregarProducto').click(function() {
+             url = "{% url 'add_productos' %}"; // URL del formulario de agregar producto
+             bootbox.dialog({
+              title: 'Formulario',
+              message: "<iframe id='formIframe' src='" + url + "' scrolling='yes' marginwidth='0' marginheight='0' frameborder='no' width='100%' height='600'></iframe>",
+              size: 'large',
+              buttons: {
+                  cancel: {
+                      label: 'Cerrar',
+                      className: 'btn-secondary',
+                      callback: function() {
+                          //location.reload(); // Recargar la página principal para actualizar la grilla
+                          $('#divContenidoPrincipal').load("{% url 'productos' %}");
+                      }
+                  }
+              }
+          });
+
+          // Escucha mensajes desde el iframe para cerrar el bootbox
+          window.addEventListener('message', function(event) {
+              if (event.data.action === 'closeBootbox') {
+                  bootbox.hideAll();
+                  location.reload(); // Recargar la página principal para actualizar la grilla
+              }
+          }, false);
 
 
+      });
+
+      });
+
+ 
     </script>
 
-  </div>
+  
 </body>
 </html>

@@ -15,25 +15,71 @@
 <body>
     
    
-
-<nav class="navbar bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-      Bootstrap
-    </a>
+    <a class="navbar-brand" href="#" id="divHome">Inicio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" id="divProductos" href="#">Productos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
   </div>
 </nav>
 
-
+<div id="divContenidoPrincipal"></div>
 
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
     <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.1/datatables.min.js" integrity="sha384-ROkeXpI5WXehVm9L/9veFByAcaYQZm1COgLHCXWOrU+gHlOgUPvkHf2V87XSC4/o" crossorigin="anonymous"></script>   
-    
-    <!-- $(document).ready(function(){
-       $('#cargarContacto').click(function(){
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.4/bootbox.all.min.js"></script>
+    <script>
+    $(document).ready(function(){
+       $('#divHome').click(function(){
+         
+              $.ajax({
+                url: "{% url 'home' %}", // URL a la que se envía la solicitud
+                method: 'GET', // Método de la solicitud (GET, POST, etc.)
+                success: function(respuesta) {
+                    // Lógica a ejecutar si la solicitud es exitosa
+                    console.log('Respuesta:', respuesta); // Muestra la respuesta en la consola
+                    //$('#resultado').text('Datos recibidos: ' + respuesta); // Actualiza un elemento HTML
+                    $('#divContenidoPrincipal').html(respuesta);
+                },
+                error: function(error) {
+                    // Lógica a ejecutar si ocurre un error
+                    console.error('Error:', error); // Muestra el error en la consola
+                }
+            });
+         })
+         
+         $('#divProductos').click(function(){
          
               $.ajax({
                 url: "{% url 'productos' %}", // URL a la que se envía la solicitud
@@ -52,9 +98,10 @@
 
 
 
+
        })
 
-    }) -->
-
+    }) 
+</script>
 </body>
 </html>
