@@ -17,17 +17,17 @@
       <h1>Lista de productos</h1>
       <input type="button" id="btnAgregarProducto" value="Agregar" />
 
-  <table id="tblProductos">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-        </tr>
-    </thead>
-    <tbody></tbody>  <!-- Se llenará con AJAX -->
-</table>
-
+        <table id="tblProductos">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>  <!-- Se llenará con AJAX -->
+        </table>
+    </div>
 
 
     <script src="{% static 'jQuery-3.7.0/jquery-3.7.0.js' %}"></script>  
@@ -72,8 +72,9 @@
           window.addEventListener('message', function(event) {
               if (event.data.action === 'closeBootbox') {
                   bootbox.hideAll();
-                  location.reload(); // Recargar la página principal para actualizar la grilla
-              }
+                  //location.reload(); // Recargar la página principal para actualizar la grilla
+                  $('#divContenidoPrincipal').load("{% url 'productos' %}");
+                }
           }, false);
 
 
