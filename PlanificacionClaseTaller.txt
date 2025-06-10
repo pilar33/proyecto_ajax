@@ -87,3 +87,13 @@ $('#btnAgregarProducto').click(function() {
 
 
       });
+
+Login
+
+1- crear app login
+2- template registration/login.html
+3- crear las url usando las vistas predefinidas de django
+4- cambiar la carga ajax en index.html
+5- usar login required (vista home por ejemplo)
+6- configura settings.py
+7- armar link logout en index.html (usar ajax/fecth para no implementar get, solo post)
