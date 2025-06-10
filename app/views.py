@@ -4,11 +4,18 @@ from django.http import JsonResponse
 from .forms import ProductoForm
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user
 # Create your views here.
 def inicio(request):
     return render(request, "index.html")
 
+@login_required
 def home(request):
+    if request.user.is_authenticated:
+        print(f"Usuario autenticado: {request.user}")
+    else:
+        print("Usuario no autenticado")
     return render(request, "home.html")
 
 def productos(request):

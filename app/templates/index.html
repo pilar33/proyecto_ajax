@@ -39,10 +39,11 @@
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
-        </li>
+        </li>   
         <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-        </li>
+          <a href="#" class="nav-link" onclick="logout()">Salir</a>
+
+        </li>     
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
@@ -60,48 +61,50 @@
     <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.3.1/datatables.min.js" integrity="sha384-ROkeXpI5WXehVm9L/9veFByAcaYQZm1COgLHCXWOrU+gHlOgUPvkHf2V87XSC4/o" crossorigin="anonymous"></script>   
      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.4/bootbox.all.min.js"></script>
     <script>
-    $(document).ready(function(){
-       $('#divHome').click(function(){
-         
-              $.ajax({
-                url: "{% url 'home' %}", // URL a la que se envía la solicitud
-                method: 'GET', // Método de la solicitud (GET, POST, etc.)
-                success: function(respuesta) {
-                    // Lógica a ejecutar si la solicitud es exitosa
-                    console.log('Respuesta:', respuesta); // Muestra la respuesta en la consola
-                    //$('#resultado').text('Datos recibidos: ' + respuesta); // Actualiza un elemento HTML
+
+    function logout() {
+        fetch("{% url 'logout' %}", {
+            method: "POST",
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'  // Usá {% csrf_token %} en un contexto seguro
+            },
+            credentials: 'include'  // para que se mande la cookie de sesión
+        }).then(() => {
+            window.location.href = "{% url 'login' %}";
+        });
+    }
+    function cargarContenido(url) {
+        $.ajax({
+            url: url,
+            method: 'GET',
+            xhrFields: { withCredentials: true },
+            success: function(respuesta) {
+                // Si la respuesta incluye el formulario de login
+                if (respuesta.includes('name="username"') && respuesta.includes('name="password"')) {
+                    window.location.href = "{% url 'login' %}";
+                } else {
                     $('#divContenidoPrincipal').html(respuesta);
-                },
-                error: function(error) {
-                    // Lógica a ejecutar si ocurre un error
-                    console.error('Error:', error); // Muestra el error en la consola
                 }
-            });
-         })
-         
-         $('#divProductos').click(function(){
-         
-              $.ajax({
-                url: "{% url 'productos' %}", // URL a la que se envía la solicitud
-                method: 'GET', // Método de la solicitud (GET, POST, etc.)
-                success: function(respuesta) {
-                    // Lógica a ejecutar si la solicitud es exitosa
-                    console.log('Respuesta:', respuesta); // Muestra la respuesta en la consola
-                    //$('#resultado').text('Datos recibidos: ' + respuesta); // Actualiza un elemento HTML
-                    $('#divContenidoPrincipal').html(respuesta);
-                },
-                error: function(error) {
-                    // Lógica a ejecutar si ocurre un error
-                    console.error('Error:', error); // Muestra el error en la consola
-                }
-            });
+            },
+            error: function(error) {
+                console.error('Error:', error);
+            }
+        });
+    }
 
+  $(document).ready(function() {
+      // Cargar 'home' por defecto
+      cargarContenido("{% url 'home' %}");
 
+      // Cargar al hacer clic
+      $('#divHome').click(function() {
+          cargarContenido("{% url 'home' %}");
+      });
 
-
-       })
-
-    }) 
+      $('#divProductos').click(function() {
+          cargarContenido("{% url 'productos' %}");
+      });
+  });
 </script>
 </body>
 </html>
