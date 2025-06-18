@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de usuario</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <a href="{% url 'home' %}" class="card-link">Inicio</a>
+        <a href="{% url 'login' %}" class="card-link">Iniciar sesion</a>
+        <button class="btn btn-sm btn-primary float-end" type="submit">Registrarse</button>
+    </form>
+</body>
+</html>

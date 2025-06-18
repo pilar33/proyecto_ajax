@@ -97,3 +97,11 @@ Login
 5- usar login required (vista home por ejemplo)
 6- configura settings.py
 7- armar link logout en index.html (usar ajax/fecth para no implementar get, solo post)
+
+registration
+
+1- crear el forms.py
+2- cear el register.html
+3 - crear la vista
+4- definir la url
+5- Agregar el link en form inicio sesion
