@@ -10,12 +10,12 @@ from django.contrib.auth import get_user
 def inicio(request):
     return render(request, "index.html")
 
-@login_required
+#@login_required
 def home(request):
-    if request.user.is_authenticated:
-        print(f"Usuario autenticado: {request.user}")
-    else:
-        print("Usuario no autenticado")
+    # if request.user.is_authenticated:
+    #     print(f"Usuario autenticado: {request.user}")
+    # else:
+    #     print("Usuario no autenticado")
     return render(request, "home.html")
 
 def productos(request):

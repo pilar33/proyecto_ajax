@@ -105,3 +105,17 @@ registration
 3 - crear la vista
 4- definir la url
 5- Agregar el link en form inicio sesion
+
+Armado de estructura base, login y control de accesos
+1- Creacion base.html (carga de librerias y scripts comunes a todo el sitio)
+2- Crear el navbar.html (menu)
+3- Creacion, adaptacion del Index.html (invoca a base.html)
+4- Agregar el inicio de sesion al header de Index.html
+5- Darle formato al login.html: https://mdbootstrap.com/docs/standard/extended/login/
+6- Incluir el navbar en el index.html, mostrarlo solo a usuarios autenticados
+7- Jugar con accesos a superusuario a modulo admin por ejemplo
+8- Instalar jazzmin django para personalizar el admin: https://django-jazzmin.readthedocs.io/configuration/
+8- mostrar accesos por permissions (Incluir permisos en el admin de django: admin.py)
+9- mostrar accesos por grupos en lenguaje de plantillas
+
+Mixins
