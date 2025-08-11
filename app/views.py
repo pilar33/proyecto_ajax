@@ -6,6 +6,13 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user
+
+# /*para el reporte*/
+from django.template.loader import get_template
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+
+
 # Create your views here.
 def inicio(request):
     return render(request, "index.html")
@@ -54,4 +61,18 @@ def agregar_productos(request):
     else:
         form = ProductoForm()
     return render(request, 'agregar.html', {'form': form})
+
+
+# vista para generar pdf
+def generar_pdf(request):
+    datos = producto.objects.all()
+    lista = [[obj.nombre, obj.descripcion] for obj in datos]  # Ajustar campos
+    encabezados = ["Nombre Producto", "Descripcion"]
+    template = get_template("reporte.html")
+    context = {"titulo": "Mi Reporte", "datos": lista, "encabezados": encabezados}
+    html = template.render(context)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "inline; filename=reporte.pdf"
+    pisa.CreatePDF(html, dest=response)
+    return response
       

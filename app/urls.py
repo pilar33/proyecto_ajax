@@ -7,4 +7,7 @@ urlpatterns = [
     path('api/productos/', views.productos_json, name='api_productos'),
     path('agregar/productos/', views.agregar_productos, name='add_productos'),
     path("home/",views.home,name="home"),
+
+    path("reporte/",views.generar_pdf,name="reporteProducto"),
+    
 ]

@@ -16,9 +16,28 @@
 
 </head>
 <body>
-  
+<header class="bg-primary text-white text-center">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1 class="display-4 mx-auto">Bienvenido a mi sitio</h1>
+      {% if request.user.is_authenticated %}
+        <span class="text-light">Hola, {{ user.username | upper }} | </span>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-light">Cerrar sesión</button>
+        </form>
+      {% else %}
+         <a href="{% url 'login' %}" class="btn btn-light ms-auto">Iniciar sesión</a>
+      {% endif %}
+    </div>
+    <p class="lead">Explora nuestro contenido y disfruta de una experiencia única</p>
+  </div>
+</header>
+{% if request.user.is_authenticated %}
+   {% include 'navbar.html' %}
+{% endif %}  
 
-<div id="container-fluid">
+<div class="container-fluid" id="divContenidoPrincipal">
     {% block content%}
 
     {% endblock content%}
@@ -37,37 +56,56 @@
     <script>
 
    
-    function cargarContenido(url) {
-        $.ajax({
-            url: url,
-            method: 'GET',
-            xhrFields: { withCredentials: true },
-            success: function(respuesta) {
-                // Si la respuesta incluye el formulario de login
-                if (respuesta.includes('name="username"') && respuesta.includes('name="password"')) {
-                    window.location.href = "{% url 'login' %}";
-                } else {
-                    $('#divContenidoPrincipal').html(respuesta);
-                }
-            },
-            error: function(error) {
-                console.error('Error:', error);
-            }
-        });
-    }
+function cargarContenido(url) {
+    $.ajax({
+      url: url,
+      method: 'GET',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }, // <- importante para que la vista pueda devolver parcial
+      xhrFields: { withCredentials: true },
+      success: function(respuesta, status, jqXHR) {
+        // 1) Si llega una página completa (con <html> o <head>), mejor navegamos para evitar re-ejecutar base.html dentro de base.html
+        if (typeof respuesta === 'string' && (respuesta.includes('<html') || respuesta.includes('<head'))) {
+          window.location.href = url;
+          return;
+        }
+
+        // 2) Si la respuesta parece el login, vamos al login
+        if (respuesta.includes('name="username"') && respuesta.includes('name="password"')) {
+          window.location.href = "{% url 'login' %}";
+          return;
+        }
+
+        // 3) Caso normal: inyectar el contenido
+        $('#divContenidoPrincipal').html(respuesta);
+      },
+      error: function(error) {
+        console.error('Error:', error);
+      }
+    });
+  }
 
   $(document).ready(function() {
-      // Cargar 'home' por defecto
+    // Evitar auto-cargar si estamos en la pantalla de login
+    const path = window.location.pathname;
+     if (path !== '/' && !path.startsWith('/login')) {
+     cargarContenido("{% url 'home' %}");
+    }
+
+    // Navegación por clicks (igual que tenías)
+    $('#divHome').click(function(e) {
+      e.preventDefault();
       cargarContenido("{% url 'home' %}");
+    });
 
-      // Cargar al hacer clic
-      $('#divHome').click(function() {
-          cargarContenido("{% url 'home' %}");
-      });
+    $('#divProductos').click(function(e) {
+      e.preventDefault();
+      cargarContenido("{% url 'productos' %}");
+    });
 
-      $('#divProductos').click(function() {
-          cargarContenido("{% url 'productos' %}");
-      });
+    $('#divReporteProducto').click(function(e) {
+      e.preventDefault();
+      cargarContenido("{% url 'reporteProducto' %}");
+    });
   });
 </script>
 </body>
