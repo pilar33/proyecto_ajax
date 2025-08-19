@@ -1,0 +1,24 @@
+  <div class="container">
+    <h3 class="mb-4">Dashboard de Productos (Plotly)</h3>
+
+    <section class="mb-4">
+      <h5>Gráfico interactivo: Activos vs Inactivos</h5>
+      {% autoescape off %}{{ plot_div }}{% endautoescape %}
+    </section>
+
+    <section class="mb-4">
+      <h5>Activos vs Inactivos (tabla)</h5>
+      {{ tabla_activos|safe }}
+      <p class="text-muted small">iEstado: 1 = activo, 0 = inactivo (o el criterio que uses).</p>
+    </section>
+
+    <section class="mb-4">
+      <h5>Productos por primera letra (tabla)</h5>
+      {{ tabla_letras|safe }}
+    </section>
+
+    <section class="mb-4">
+      <h5>Longitud promedio de la descripción</h5>
+      <p class="fs-5"><strong>{{ prom_len }}</strong> caracteres</p>
+    </section>
+  </div>

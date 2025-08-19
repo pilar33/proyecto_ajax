@@ -106,6 +106,17 @@ function cargarContenido(url) {
       e.preventDefault();
       cargarContenido("{% url 'reporteProducto' %}");
     });
+
+    $('#divDashboard').click(function(e) {
+      e.preventDefault();
+      cargarContenido("{% url 'dashboardProducto' %}");
+    });
+
+    $('#divDashboardPlotly').click(function(e) {
+      e.preventDefault();
+      cargarContenido("{% url 'dashboardProductoPlotly' %}");
+    });
+
   });
 </script>
 </body>

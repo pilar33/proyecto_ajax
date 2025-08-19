@@ -9,5 +9,7 @@ urlpatterns = [
     path("home/",views.home,name="home"),
 
     path("reporte/",views.generar_pdf,name="reporteProducto"),
+    path("dashboard/",views.dashboard_productos,name="dashboardProducto"),
+    path("dashboardPlotly/",views.dashboard_productos_plotly,name="dashboardProductoPlotly"),
     
 ]
